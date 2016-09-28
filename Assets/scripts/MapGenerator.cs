@@ -32,10 +32,6 @@ public class MapGenerator : MonoBehaviour {
 		for (int i = 0; i < 5; i ++) {
 			SmoothMap();
 		}
-
-		MeshGenerator meshGen = GetComponent<MeshGenerator> ();
-		meshGen.GenerateMesh (map, 1);
-
 	}
 
 
