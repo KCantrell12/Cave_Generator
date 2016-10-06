@@ -6,15 +6,17 @@ public class MeshGenerator : MonoBehaviour {
 
 	public SquareGrid squareGrid;
 	public MeshFilter walls;
+
 	List<Vector3> vertices;
 	List<int> triangles;
 
 	Dictionary<int,List<Triangle>> triangleDictionary = new Dictionary<int, List<Triangle>> ();
-	List<List<int>> otliunes = new List<List<int>> ();
-	HashSet<int> checkedVertices = new HashSet<int> ();
+	List<List<int>> outlines = new List<List<int>> ();
+	HashSet<int> checkedVertices = new HashSet<int>();
 
 	public void GenerateMesh(int[,] map, float squareSize) {
 
+		triangleDictionary.Clear ();
 		outlines.Clear ();
 		checkedVertices.Clear ();
 
@@ -23,9 +25,9 @@ public class MeshGenerator : MonoBehaviour {
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
 
-		for (int x = 0; x < squareGrid.squares.GetLength (0); x++) {
-			for (int y = 0; y < squareGrid.squares.GetLength (1); y++) {
-				TriangulateSquare (squareGrid.squares [x, y]);
+		for (int x = 0; x < squareGrid.squares.GetLength(0); x ++) {
+			for (int y = 0; y < squareGrid.squares.GetLength(1); y ++) {
+				TriangulateSquare(squareGrid.squares[x,y]);
 			}
 		}
 
@@ -48,21 +50,21 @@ public class MeshGenerator : MonoBehaviour {
 		Mesh wallMesh = new Mesh ();
 		float wallHeight = 5;
 
-		foreach (List<int> outline in outline) {
-			for (int i = 0; i < outline.Count - 1; i++) {
+		foreach (List<int> outline in outlines) {
+			for (int i = 0; i < outline.Count -1; i ++) {
 				int startIndex = wallVertices.Count;
-				wallVertices.Add (vertices [outline [i]]); //left
-				wallVertices.Add (vertices [outline [i+1]]); //right
-				wallVertices.Add (vertices [outline [i]] - Vector3.up * wallHeight); //bottom left
-				wallVertices.Add (vertices [outline [i]] - Vector3.up * wallHeight); //bottom right
+				wallVertices.Add(vertices[outline[i]]); // left
+				wallVertices.Add(vertices[outline[i+1]]); // right
+				wallVertices.Add(vertices[outline[i]] - Vector3.up * wallHeight); // bottom left
+				wallVertices.Add(vertices[outline[i+1]] - Vector3.up * wallHeight); // bottom right
 
-				wallTriangles.Add (startIndex + 0);
-				wallTriangles.Add (startIndex + 2);
-				wallTriangles.Add (startIndex + 3);
+				wallTriangles.Add(startIndex + 0);
+				wallTriangles.Add(startIndex + 2);
+				wallTriangles.Add(startIndex + 3);
 
-				wallTriangles.Add (startIndex + 3);
-				wallTriangles.Add (startIndex + 1);
-				wallTriangles.Add (startIndex + 0);
+				wallTriangles.Add(startIndex + 3);
+				wallTriangles.Add(startIndex + 1);
+				wallTriangles.Add(startIndex + 0);
 			}
 		}
 		wallMesh.vertices = wallVertices.ToArray ();
@@ -75,77 +77,78 @@ public class MeshGenerator : MonoBehaviour {
 		case 0:
 			break;
 
-		// 1 point
+			// 1 points:
 		case 1:
-			MeshFromPoints (square.centreLeft, square.centreBottom, square.bottomLeft);
+			MeshFromPoints(square.centreLeft, square.centreBottom, square.bottomLeft);
 			break;
 		case 2:
-			MeshFromPoints (square.bottomRight, square.centreBottom, square.centreRight);
+			MeshFromPoints(square.bottomRight, square.centreBottom, square.centreRight);
 			break;
 		case 4:
-			MeshFromPoints (square.topRight, square.centreRight, square.centreTop);
+			MeshFromPoints(square.topRight, square.centreRight, square.centreTop);
 			break;
 		case 8:
-			MeshFromPoints (square.topLeft, square.centreTop, square.centreLeft);
+			MeshFromPoints(square.topLeft, square.centreTop, square.centreLeft);
 			break;
 
-		//2 points
+			// 2 points:
 		case 3:
-			MeshFromPoints (square.centreRight, square.bottomRight, square.bottomLeft, square.centreLeft);
+			MeshFromPoints(square.centreRight, square.bottomRight, square.bottomLeft, square.centreLeft);
 			break;
 		case 6:
-			MeshFromPoints (square.centreTop, square.topRight, square.bottomRight, square.centreBottom);
+			MeshFromPoints(square.centreTop, square.topRight, square.bottomRight, square.centreBottom);
 			break;
 		case 9:
-			MeshFromPoints (square.topLeft, square.centreTop, square.centreBottom, square.bottomLeft);
+			MeshFromPoints(square.topLeft, square.centreTop, square.centreBottom, square.bottomLeft);
 			break;
 		case 12:
-			MeshFromPoints (square.topLeft, square.topRight, square.centreRight, square.centreLeft);
+			MeshFromPoints(square.topLeft, square.topRight, square.centreRight, square.centreLeft);
 			break;
 		case 5:
-			MeshFromPoints (square.centreTop, square.topRight, square.centreRight, square.centreBottom, square.bottomLeft, square.centreLeft);
+			MeshFromPoints(square.centreTop, square.topRight, square.centreRight, square.centreBottom, square.bottomLeft, square.centreLeft);
 			break;
 		case 10:
-			MeshFromPoints (square.topLeft, square.centreTop, square.centreRight, square.bottomRight, square.centreBottom, square.centreLeft);
+			MeshFromPoints(square.topLeft, square.centreTop, square.centreRight, square.bottomRight, square.centreBottom, square.centreLeft);
 			break;
 
-		//3 points
+			// 3 point:
 		case 7:
-			MeshFromPoints (square.centreTop, square.topRight, square.bottomRight, square.bottomLeft, square.centreLeft);
+			MeshFromPoints(square.centreTop, square.topRight, square.bottomRight, square.bottomLeft, square.centreLeft);
 			break;
 		case 11:
-			MeshFromPoints (square.topLeft, square.centreTop, square.centreRight, square.bottomRight, square.bottomLeft);
+			MeshFromPoints(square.topLeft, square.centreTop, square.centreRight, square.bottomRight, square.bottomLeft);
 			break;
 		case 13:
-			MeshFromPoints (square.topLeft, square.topRight, square.centreRight, square.centreBottom, square.bottomLeft);
+			MeshFromPoints(square.topLeft, square.topRight, square.centreRight, square.centreBottom, square.bottomLeft);
 			break;
 		case 14:
-			MeshFromPoints (square.topLeft, square.topRight, square.bottomRight, square.centreBottom, square.centreLeft);
+			MeshFromPoints(square.topLeft, square.topRight, square.bottomRight, square.centreBottom, square.centreLeft);
 			break;
 
-		//4 point
+			// 4 point:
 		case 15:
-			MeshFromPoints (square.topLeft, square.topRight, square.bottomRight, square.bottomLeft);
-			checkedVertices.Add (square.topLeft.vertexIndex);
-			checkedVertices.Add (square.topRight.vertexIndex);
-			checkedVertices.Add (square.bottomRight.vertexIndex);
-			checkedVertices.Add (square.bottomLeft.vertexIndex);
+			MeshFromPoints(square.topLeft, square.topRight, square.bottomRight, square.bottomLeft);
+			checkedVertices.Add(square.topLeft.vertexIndex);
+			checkedVertices.Add(square.topRight.vertexIndex);
+			checkedVertices.Add(square.bottomRight.vertexIndex);
+			checkedVertices.Add(square.bottomLeft.vertexIndex);
 			break;
-			
 		}
+
 	}
 
 	void MeshFromPoints(params Node[] points) {
-		AssignVertices (points);
+		AssignVertices(points);
 
 		if (points.Length >= 3)
-			CreateTriangle(points[0], points[1], points[2]); 
+			CreateTriangle(points[0], points[1], points[2]);
 		if (points.Length >= 4)
-			CreateTriangle(points[0], points[2], points[3]); 
-		if (points.Length >= 5)
-			CreateTriangle(points[0], points[3], points[4]); 
+			CreateTriangle(points[0], points[2], points[3]);
+		if (points.Length >= 5) 
+			CreateTriangle(points[0], points[3], points[4]);
 		if (points.Length >= 6)
-			CreateTriangle(points[0], points[4], points[5]); 
+			CreateTriangle(points[0], points[4], points[5]);
+
 	}
 
 	void AssignVertices(Node[] points) {
@@ -180,11 +183,11 @@ public class MeshGenerator : MonoBehaviour {
 
 	void CalculateMeshOutlines() {
 
-		for (int vertexIndex = 0; vertexIndex < vertices.Count; vertexIndex++) {
-			if (!checkedVertices.Contains (vertexIndex)) {
-				int newOutlineVertex = GetConnectedOutlineVertex (vertexIndex);
+		for (int vertexIndex = 0; vertexIndex < vertices.Count; vertexIndex ++) {
+			if (!checkedVertices.Contains(vertexIndex)) {
+				int newOutlineVertex = GetConnectedOutlineVertex(vertexIndex);
 				if (newOutlineVertex != -1) {
-					checkedVertices.Add (vertexIndex);
+					checkedVertices.Add(vertexIndex);
 
 					List<int> newOutline = new List<int>();
 					newOutline.Add(vertexIndex);
@@ -202,25 +205,26 @@ public class MeshGenerator : MonoBehaviour {
 		int nextVertexIndex = GetConnectedOutlineVertex (vertexIndex);
 
 		if (nextVertexIndex != -1) {
-			FollowOutline (nextVertexIndex, outlineIndex);
+			FollowOutline(nextVertexIndex, outlineIndex);
 		}
 	}
 
 	int GetConnectedOutlineVertex(int vertexIndex) {
 		List<Triangle> trianglesContainingVertex = triangleDictionary [vertexIndex];
 
-		for (int i = 0; i < trianglesContainingVertex.Count; i++) {
-			Triangle triangle = trianglesContainingVertex [i];
+		for (int i = 0; i < trianglesContainingVertex.Count; i ++) {
+			Triangle triangle = trianglesContainingVertex[i];
 
-			for (int j = 0; j < 3; j++) {
-				int vertexB = triangle [j];
+			for (int j = 0; j < 3; j ++) {
+				int vertexB = triangle[j];
 				if (vertexB != vertexIndex && !checkedVertices.Contains(vertexB)) {
-					if (IsOutlineEdge (vertexIndex, vertexB)) {
+					if (IsOutlineEdge(vertexIndex, vertexB)) {
 						return vertexB;
 					}
 				}
 			}
 		}
+
 		return -1;
 	}
 
@@ -228,24 +232,24 @@ public class MeshGenerator : MonoBehaviour {
 		List<Triangle> trianglesContainingVertexA = triangleDictionary [vertexA];
 		int sharedTriangleCount = 0;
 
-		for (int i = 0; i < trianglesContainingVertexA.Count; i++) {
-			if (trianglesContainingVertexA[i].Contains(vertexB) {
-				sharedTriangleCount +1;
+		for (int i = 0; i < trianglesContainingVertexA.Count; i ++) {
+			if (trianglesContainingVertexA[i].Contains(vertexB)) {
+				sharedTriangleCount ++;
 				if (sharedTriangleCount > 1) {
 					break;
 				}
 			}
 		}
-				return sharedTriangleCount == 1;
+		return sharedTriangleCount == 1;
 	}
-		
+
 	struct Triangle {
 		public int vertexIndexA;
 		public int vertexIndexB;
 		public int vertexIndexC;
 		int[] vertices;
 
-		public Triangle (int a, int b, int c){
+		public Triangle (int a, int b, int c) {
 			vertexIndexA = a;
 			vertexIndexB = b;
 			vertexIndexC = c;
@@ -257,10 +261,11 @@ public class MeshGenerator : MonoBehaviour {
 		}
 
 		public int this[int i] {
-			get{
-				return vertices [i];
+			get {
+				return vertices[i];
 			}
 		}
+
 
 		public bool Contains(int vertexIndex) {
 			return vertexIndex == vertexIndexA || vertexIndex == vertexIndexB || vertexIndex == vertexIndexC;
@@ -321,6 +326,7 @@ public class MeshGenerator : MonoBehaviour {
 			if (bottomLeft.active)
 				configuration += 1;
 		}
+
 	}
 
 	public class Node {

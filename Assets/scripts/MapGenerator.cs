@@ -2,10 +2,6 @@
 using System.Collections;
 using System;
 
-using UnityEngine;
-using System.Collections;
-using System;
-
 public class MapGenerator : MonoBehaviour {
 
 	public int width;
@@ -37,16 +33,16 @@ public class MapGenerator : MonoBehaviour {
 			SmoothMap();
 		}
 
-		int borderSize = 5;
-		int[,] borderedMap = new int[width + borderSize * 2, height + borderSize * 2];
+		int borderSize = 1;
+		int[,] borderedMap = new int[width + borderSize * 2,height + borderSize * 2];
 
-		for (int x = 0; x < borderedMap.GetLength(0); x++) {
-			for (int y = 0; y < borderedMap.GetLength(1); y++) {
+		for (int x = 0; x < borderedMap.GetLength(0); x ++) {
+			for (int y = 0; y < borderedMap.GetLength(1); y ++) {
 				if (x >= borderSize && x < width + borderSize && y >= borderSize && y < height + borderSize) {
-					borderedMap [x, y] = map [x - borderSize, y - borderSize];
+					borderedMap[x,y] = map[x-borderSize,y-borderSize];
 				}
 				else {
-					borderedMap [x, y] = 1;		
+					borderedMap[x,y] =1;
 				}
 			}
 		}
