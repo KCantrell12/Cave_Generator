@@ -228,10 +228,10 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1520226800}
-  - 114: {fileID: 1520226799}
   - 114: {fileID: 1520226801}
   - 33: {fileID: 1520226803}
   - 23: {fileID: 1520226802}
+  - 114: {fileID: 1520226799}
   m_Layer: 0
   m_Name: MapGenerator
   m_TagString: Untagged
@@ -247,14 +247,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1520226798}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8565c6c52426bd049be848e040ebe19a, type: 3}
+  m_Script: {fileID: 11500000, guid: 4658145fc0aff9045ba69e530f155adb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 60
+  width: 80
   height: 80
   seed: 
-  useRandomSeed: 1
-  randomFillPercent: 44
+  useRandomSeed: 0
+  randomFillPercent: 45
 --- !u!4 &1520226800
 Transform:
   m_ObjectHideFlags: 0
@@ -294,7 +294,6 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 0}
   - {fileID: 2100000, guid: 84e09f3197a7cac408ec6ad2be623466, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
